@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#root {
+  background: linear-gradient(to right, #ebf8ff, transparent);
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  #root {
+    font-size: 1rem;
+  }
+}
