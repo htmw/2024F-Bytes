@@ -1,26 +1,21 @@
-//import { useState } from "react";
+import React from 'react';
+import Header from './components/Header';
+import LanguageSelection from './components/LanguageSelection';
+import SignInDropdown from './components/SignInDropdown';
+import TextBoxes from './components/TextBoxes';
+import TranslationOptions from './components/TranslationOptions';
+import './index.css';
 
-function App() {
-  //const [count, setCount] = useState(0);
-
+const App = () => {
   return (
-    <div className="main-page-div">
-      <section className="main-section">
-        <header className="main-header">
-          <h1>
-            Speak<span className="header-text-span">EZ</span>
-          </h1>
-          <button className="header-button">
-            <i className="fa-solid fa-ellipsis-vertical"></i>
-          </button>
-        </header>
-        <main className="main-body"></main>
-      </section>
-      <footer>
-        <h1 className="text-black-400">Pace University@2024</h1>
-      </footer>
+    <div className="App">
+      <Header />
+      <SignInDropdown />
+      <LanguageSelection />
+      <TextBoxes />
+      <TranslationOptions />
     </div>
   );
-}
+};
 
 export default App;
