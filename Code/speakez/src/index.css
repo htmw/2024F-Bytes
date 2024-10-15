@@ -222,3 +222,27 @@ select.language-button {
     text-align: center;
     margin-top: 10px;
 }
+/* index.css */
+.App {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+
+
+.sign-in-dropdown {
+  position: absolute;
+  top: 40px; /* Adjust as necessary */
+  right: 0;
+  border: 1px solid #ccc;
+  background: white;
+  padding: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensures dropdown appears above other elements */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+}
+
+.sign-in-button {
+  cursor: pointer;
+}

@@ -1,41 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-const TranslationOptions = () => {
-  const [languages, setLanguages] = useState([]);
-  const [sourceLanguage, setSourceLanguage] = useState("");
-  const [targetLanguage, setTargetLanguage] = useState("");
+const TranslationOptions = ({ languages, sourceLanguage, targetLanguage }) => {
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
   const [fileUploadNames, setFileUploadNames] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [uploadFilesArray, setUploadFilesArray] = useState([]);
-  const maxFileSize = 5 * 1024 * 1024; // 5MB
-
-  useEffect(() => {
-    fetchLanguages();
-  }, []);
-
-  const fetchLanguages = async () => {
-    const apiUrl = "https://libretranslate.com/languages";
-    try {
-      const response = await fetch(apiUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const languagesData = await response.json();
-      setLanguages(languagesData);
-      setSourceLanguage(languagesData[0]?.code || "");
-      setTargetLanguage(languagesData[1]?.code || "");
-    } catch (error) {
-      console.error("Error fetching languages:", error);
-    }
-  };
-
-  const swapLanguages = () => {
-    setSourceLanguage(targetLanguage);
-    setTargetLanguage(sourceLanguage);
-    translateText();
-  };
+  const maxFileSize = 3 * 1024 * 1024; // 3MB
 
   const translateText = async () => {
     if (!sourceLanguage || !targetLanguage || !inputText) {
@@ -73,81 +43,78 @@ const TranslationOptions = () => {
   };
 
   const handleFileChange = (event) => {
-    setErrorMessage("");
     const files = Array.from(event.target.files);
     let newFileUploadNames = [];
-    let newUploadFilesArray = [];
+    let error = "";
 
-    files.forEach((file, index) => {
+    files.forEach((file) => {
       if (file.size <= maxFileSize && file.type === "audio/mp3") {
         newFileUploadNames.push(file.name);
-        newUploadFilesArray.push(file);
       } else if (file.size > maxFileSize) {
-        setErrorMessage("Sorry, your file is too large. Maximum limit is 5MB.");
+        error = "Sorry, your file is too large. Maximum limit is 3MB.";
       } else {
-        setErrorMessage('Please upload files in ".mp3" format only');
+        error = 'Please upload files in ".mp3" format only';
       }
     });
 
     setFileUploadNames(newFileUploadNames);
-    setUploadFilesArray(newUploadFilesArray);
+    setErrorMessage(error);
     event.target.value = ""; // Clear the input
   };
 
   const deleteFile = (index) => {
-    const updatedFiles = uploadFilesArray.filter((_, i) => i !== index);
     const updatedFileNames = fileUploadNames.filter((_, i) => i !== index);
-    setUploadFilesArray(updatedFiles);
     setFileUploadNames(updatedFileNames);
-  };
-
-  const handleInputChange = (event) => {
-    setInputText(event.target.value);
   };
 
   return (
     <section className="translation-options">
-      <div className="language-selection">
-        <select value={sourceLanguage} onChange={(e) => setSourceLanguage(e.target.value)}>
-          {languages.map((language) => (
-            <option key={language.code} value={language.code}>
-              {language.name}
-            </option>
-          ))}
-        </select>
-        <button className="arrows" onClick={swapLanguages}>
-          &#11138;
-        </button>
-        <select value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)}>
-          {languages.map((language) => (
-            <option key={language.code} value={language.code}>
-              {language.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <textarea
-        id="inputText"
-        value={inputText}
-        onChange={handleInputChange}
-        placeholder="Enter text to translate..."
-      ></textarea>
-      <textarea id="outputText" value={outputText} readOnly placeholder="Translated text will appear here..."></textarea>
-      <div>
+      <div className="file-upload-section">
         <div id="drop-area" className="uploadbox">
-          <p>Drag and drop or <a href="#" onClick={() => document.getElementById("fileInput").click()}>browse</a> your files</p>
-          <input type="file" id="fileInput" multiple accept="audio/mp3" onChange={handleFileChange} style={{ display: "none" }} />
-          <ul id="fileUploadName">
-            {fileUploadNames.map((name, index) => (
-              <li key={index}>
-                {name} selected <i onClick={() => deleteFile(index)} style={{ color: "red", cursor: "pointer" }}>&#10006;</i>
-              </li>
-            ))}
-          </ul>
-          <div className="fileUploadError">{errorMessage}</div>
+          <p>
+            Drag and drop or{" "}
+            <a href="#" onClick={() => document.getElementById("fileInput").click()}>
+              browse
+            </a>{" "}
+            your files
+          </p>
+          <input
+            type="file"
+            id="fileInput"
+            multiple
+            accept="audio/mp3"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
         </div>
+        
+        {/* Display file names below the upload box */}
+        <ul id="fileUploadName" style={{ listStyleType: 'none', padding: 0 }}>
+          {fileUploadNames.length > 0 ? (
+            fileUploadNames.map((name, index) => (
+              <li key={index}>
+                {name} selected{" "}
+                <i
+                  onClick={() => deleteFile(index)}
+                  style={{ color: "red", cursor: "pointer" }}
+                >
+                  &#10006;
+                </i>
+              </li>
+            ))
+          ) : (
+            <li>No files selected</li>
+          )}
+        </ul>
+
+        {/* Display error message below the upload box */}
+        {errorMessage && <div className="fileUploadError" style={{ color: "red" }}>{errorMessage}</div>}
+
+        <button className="upload-button">Upload</button>
+        <button className="record-button">
+          <i className="fas fa-microphone"></i>
+        </button>
       </div>
-      <button onClick={translateText} className="upload-button">Upload</button>
     </section>
   );
 };
