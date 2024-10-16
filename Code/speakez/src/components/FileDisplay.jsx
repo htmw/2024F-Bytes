@@ -22,10 +22,10 @@ export default function FileDisplay() {
               accept=".mp3, .wave"
             />
           </label>{" "}
-          your files
+          your file
         </p>
 
-        <p>{file.name}</p>
+        
       </div>
     </div>
   );
