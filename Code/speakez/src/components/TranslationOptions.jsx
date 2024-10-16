@@ -1,46 +1,46 @@
 import React, { useState } from "react";
 
-const TranslationOptions = ({ languages, sourceLanguage, targetLanguage }) => {
-  const [inputText, setInputText] = useState("");
-  const [outputText, setOutputText] = useState("");
+const TranslationOptions = ({ /*languages, sourceLanguage, targetLanguage*/ }) => {
+  // const [inputText, setInputText] = useState("");
+  // const [outputText, setOutputText] = useState("");
   const [fileUploadNames, setFileUploadNames] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const maxFileSize = 3 * 1024 * 1024; // 3MB
 
-  const translateText = async () => {
-    if (!sourceLanguage || !targetLanguage || !inputText) {
-      setOutputText("");
-      return;
-    }
+  // const translateText = async () => {
+  //   if (!sourceLanguage || !targetLanguage || !inputText) {
+  //     setOutputText("");
+  //     return;
+  //   }
 
-    const apiUrl = "https://libretranslate.com/translate";
-    const data = {
-      q: inputText,
-      source: sourceLanguage,
-      target: targetLanguage,
-      format: "text",
-    };
+  //   const apiUrl = "https://libretranslate.com/translate";
+  //   const data = {
+  //     q: inputText,
+  //     source: sourceLanguage,
+  //     target: targetLanguage,
+  //     format: "text",
+  //   };
 
-    try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+  //   try {
+  //     const response = await fetch(apiUrl, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
 
-      const result = await response.json();
-      setOutputText(result.translatedText);
-    } catch (error) {
-      console.error("Error translating text:", error);
-      alert("An error occurred while translating.");
-    }
-  };
+  //     const result = await response.json();
+  //     setOutputText(result.translatedText);
+  //   } catch (error) {
+  //     console.error("Error translating text:", error);
+  //     alert("An error occurred while translating.");
+  //   }
+  // };
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
