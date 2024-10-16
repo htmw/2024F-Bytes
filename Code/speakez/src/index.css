@@ -1,4 +1,3 @@
-
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -7,7 +6,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; 
+  min-height: 100vh;
   text-align: center;
 }
 
@@ -24,7 +23,7 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 600px; 
+  max-width: 600px;
 }
 
 .language-selection {
@@ -44,7 +43,7 @@ body {
   cursor: pointer;
   font-size: 18px;
   margin: 0 45px;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   text-align: center;
   line-height: normal;
 }
@@ -64,7 +63,6 @@ select.language-button {
   font-size: 45px;
   color: rgb(149, 144, 197);
   cursor: pointer;
-  
 }
 
 .text-boxes {
@@ -75,7 +73,8 @@ select.language-button {
   width: 100%;
 }
 
-.input-text, .output-text {
+.input-text,
+.output-text {
   width: 90%;
   height: 100px;
   padding: 15px;
@@ -108,9 +107,8 @@ select.language-button {
   font-size: 18px;
   margin: 65px;
   cursor: pointer;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
 
 .record-button {
   font-size: 25px;
@@ -118,7 +116,6 @@ select.language-button {
   border: none;
   cursor: pointer;
 }
-
 
 .right-menu {
   position: absolute;
@@ -136,20 +133,20 @@ select.language-button {
   color: white;
   font-size: 18px;
   cursor: pointer;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
- .sign-in-dropdown {
+.sign-in-dropdown {
   display: none;
   position: absolute;
   right: 20px;
   top: 70px;
   background-color: #f9f9f9;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   padding: 20px;
   width: 250px;
   z-index: 1;
-} 
+}
 
 .sign-in-dropdown form {
   display: flex;
@@ -174,61 +171,58 @@ select.language-button {
 
 .show {
   display: block;
-} 
-.textalignleft{
- text-align: left;
 }
-.uploadbox{
+.textalignleft {
+  text-align: left;
+}
+/* .uploadbox {
   border: 1px dashed black;
-    border-radius: 10px 10px 10px 10px;
-    height: auto;
-    max-height: 140px;
-}
+  border-radius: 10px 10px 10px 10px;
+  height: auto;
+  max-height: 140px;
+} */
 
 .uploadbox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 300px;
-    height: 150px;
-    border: 2px dashed #f5f5dc;
-    border-radius: 10px;
-    color: #333;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    cursor: pointer;
-    margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 150px;
+  border: 2px dashed #f5f5dc;
+  border-radius: 10px;
+  color: #333;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  cursor: pointer;
+  margin: 20px auto;
 }
 
-
 .plus-icon {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .uploadbox a {
-    color: purple;
-    text-decoration: none;
+  color: purple;
+  text-decoration: none;
 }
 
 .uploadbox a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .fileUploadError {
-    color: red;
-    text-align: center;
-    margin-top: 10px;
+  color: red;
+  text-align: center;
+  margin-top: 10px;
 }
 /* index.css */
 .App {
   font-family: Arial, sans-serif;
   padding: 20px;
 }
-
-
 
 .sign-in-dropdown {
   position: absolute;
