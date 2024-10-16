@@ -1,4 +1,4 @@
-<!--DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -23,84 +23,4 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-</html-->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Translator</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-</head>
-<body>
-    <header class="logo-image">
-        <img src="images/Logo.jpg" alt="Logo">
-    </header>
-    <div class="right-menu">
-        <button id="signInButton" class="sign-in-button">Sign In</button>
-    </div>
-    <div id="signInDropdown" class="sign-in-dropdown">
-        <form>
-            <label for="email">Email:</label>
-            <input type="email" id="email" placeholder="Enter your email">
-            <label for="password">Password:</label>
-            <input type="password" id="password" placeholder="Enter your password">
-            <button type="submit">Sign In</button>
-            <a href="#">Forgot password?</a>
-            <p>Don't have an account? <a href="#">Sign up</a></p>
-        </form>
-    </div>
-    
-
-    <div class="container">
-        <section class="language-selection">
-            <select id="sourceLanguage" placeholder="ddd" class="language-button"></select>
-            <button class="arrows" id="swapButton">&#11138;</button>
-            <select id="targetLanguage" class="language-button"></select>
-        </section>
-
-        <section class="text-boxes">
-            <textarea id="inputText" style="display: none" class="input-text" placeholder="Enter text to translate..."></textarea>
-            <hr class="separator-line">
-        </section>
-
-        <section class="translation-options">
-            <button id="uploadButton" class="upload-button">Upload</button>
-        
-            <div id="uploadSection" style="display: none;">
-                <div id="drop-area">
-                    <div class="form-group">
-                        <div class="uploadbox" id="dropArea">
-                            <span class="plus-icon">+</span>
-                            <p>Drag and drop or <a href="#" onclick="document.getElementById('fileInput').click()">browse</a> your files</p>
-                            <input type="file" id="fileInput" multiple style="display: none;">
-                        </div>
-                        <div class="fileUploadError"></div>
-                        <ul id="fileUploadName"></ul>
-                    </div>
-                </div>
-        
-                <div class="row">
-                    <ul id="fileUploadName"></ul>
-                    <div class="fileUploadError"></div>
-                </div>
-        
-                <div class="row">
-                    <div class="col-sm-12 textalignleft">
-                        <p>File limited to <b>3 MB.</b><br>Allowed file types: <b>audio / mp3.</b></p>
-                    </div>
-                </div>
-            </div>
-        
-        </section>
-
-        <div>
-            <button id="translateButton">Translate</button>
-        </div>
-
-    </div>
-</body>
 </html>
