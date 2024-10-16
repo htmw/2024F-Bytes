@@ -1,0 +1,224 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #ebeeee, #b5b5c2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; 
+    text-align: center;
+  }
+  
+  .logo-image img {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    size: 25px;
+    width: 100px;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; 
+  }
+  
+  .language-selection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 50px;
+  }
+  
+  .language-button {
+    background-color: #3b8ddae7;
+    border: none;
+    padding: 22px 70px;
+    color: rgb(0, 0, 0);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 45px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    text-align: center;
+    line-height: normal;
+  
+  }
+  
+  select.language-button {
+    height: 60px; 
+     padding: 0 20px;
+    line-height: normal; 
+    text-align: center; 
+    text-align-last: center; 
+     appearance: none; 
+  }
+  
+  .arrows {
+    background-color: transparent;
+    border: none;
+    font-size: 45px;
+    color: rgb(19, 19, 18);
+    cursor: pointer;
+    
+  }
+  
+  .text-boxes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  
+  
+  .separator-line {
+    width: 90%;
+    border: 0;
+    height: 1px;
+    background-color: #100f0f;
+    margin: 20px 0;
+  }
+  
+  .upload-button {
+    background-color: #3b8ddae7;
+    border: none;
+    border-radius: 35px;
+    padding: 10px 25px;
+    color: rgb(0, 0, 0);
+    font-size: 18px;
+    margin: 65px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    justify-content: center;
+    
+  }
+  
+  
+  .right-menu {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .sign-in-button {
+    background-color: #6baadb;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 8px;
+    color: rgb(0, 0, 0);
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  }
+  
+   .sign-in-dropdown {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 70px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 20px;
+    width: 250px;
+    z-index: 1;
+  } 
+  
+  .sign-in-dropdown form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sign-in-dropdown input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .sign-in-dropdown button {
+    background-color: #5091df;
+    border: none;
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .show {
+    display: block;
+  } 
+  
+  
+  .textalignleft{
+   text-align: left;
+  }
+  
+  
+  .uploadbox{
+    border: 1px dashed black;
+      border-radius: 10px 10px 10px 10px;
+      height: auto;
+      max-height: 140px;
+  }
+  
+  .uploadbox {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 300px;
+      height: 150px;
+      border: 2px dashed #f5f5dc;
+      border-radius: 10px;
+      color: #333;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      cursor: pointer;
+      margin: 20px auto;
+  }
+  
+  
+  .plus-icon {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+  }
+  
+  .uploadbox a {
+      color: rgb(41, 136, 204);
+      text-decoration: none;
+  }
+  
+  .uploadbox a:hover {
+      text-decoration: underline;
+  }
+  
+  .fileUploadError {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+  } 
+  
+  
+  #translateButton {
+    background-color: #beb366; 
+    color: rgb(0, 0, 0);
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer;
+    font-size: 16px; 
+    width: 100%; 
+    max-width: 200px; 
+    margin-top: 10px; 
+  }
+  
