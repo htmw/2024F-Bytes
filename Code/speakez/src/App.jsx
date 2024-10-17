@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import SignInDropdown from "./components/SignInDropdown";
 // import LanguageSelection from "./components/LanguageSelection";
-// import TextBoxes from "./components/TextBoxes";
-// import TranslationOptions from "./components/TranslationOptions";
+//import TextBoxes from "./components/TextBoxes";
+//import TranslationOptions from "./components/TranslationOptions";
 import "./index.css";
 import FileDisplay from "./components/FileDisplay";
 
@@ -35,10 +35,10 @@ const App = () => {
   //   }
   // };
 
-  // const swapLanguages = () => {
-  //   setSourceLanguage((prev) => targetLanguage);
-  //   setTargetLanguage((prev) => sourceLanguage);
-  // };
+  //    const swapLanguages = () => {
+  //    setSourceLanguage((prev) => targetLanguage);
+  //    setTargetLanguage((prev) => sourceLanguage);
+  //  };
 
   
   return (
@@ -59,7 +59,7 @@ const App = () => {
         sourceLanguage={sourceLanguage}
         targetLanguage={targetLanguage}
       />*/}
-      <FileDisplay />
+      <FileDisplay/>
     </div>
   );
 };

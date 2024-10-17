@@ -5,7 +5,7 @@ const TranslationOptions = ({ /*languages, sourceLanguage, targetLanguage*/ }) =
   // const [outputText, setOutputText] = useState("");
   const [fileUploadNames, setFileUploadNames] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const maxFileSize = 3 * 1024 * 1024; // 3MB
+  //const maxFileSize = 3 * 1024 * 1024; // 3MB
 
   // const translateText = async () => {
   //   if (!sourceLanguage || !targetLanguage || !inputText) {
@@ -47,15 +47,15 @@ const TranslationOptions = ({ /*languages, sourceLanguage, targetLanguage*/ }) =
     let newFileUploadNames = [];
     let error = "";
 
-    files.forEach((file) => {
-      if (file.size <= maxFileSize && file.type === "audio/mp3") {
-        newFileUploadNames.push(file.name);
-      } else if (file.size > maxFileSize) {
-        error = "Sorry, your file is too large. Maximum limit is 3MB.";
-      } else {
-        error = 'Please upload files in ".mp3" format only';
-      }
-    });
+    // files.forEach((file) => {
+    //   if (file.size <= maxFileSize && file.type === "audio/mp3") {
+    //     newFileUploadNames.push(file.name);
+    //   } else if (file.size > maxFileSize) {
+    //     error = "Sorry, your file is too large. Maximum limit is 3MB.";
+    //   } else {
+    //     error = 'Please upload files in ".mp3" format only';
+    //   }
+    // });
 
     setFileUploadNames(newFileUploadNames);
     setErrorMessage(error);
