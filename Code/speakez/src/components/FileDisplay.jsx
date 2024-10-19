@@ -1,11 +1,15 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export default function FileDisplay() {
+  const navigate = useNavigate();
+  const clickTranscribe = () => { navigate('/FileDisplayTrans');};
   const [file, setFile] = useState(null);
   function deleteSelectedFile() {
     setFile(null);
   }
+
   return (
     <div>
       <div id="drop-area" className="uploadbox">
@@ -60,6 +64,13 @@ export default function FileDisplay() {
           </p>
         </div>
       ) : null}
-    </div>
+
+      <button onClick={clickTranscribe}>Transcribe</button>
+   
+    </div>    
+
   );
 }
+
+
+

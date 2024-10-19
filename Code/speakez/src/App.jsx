@@ -6,6 +6,9 @@ import SignInDropdown from "./components/SignInDropdown";
 //import TranslationOptions from "./components/TranslationOptions";
 import "./index.css";
 import FileDisplay from "./components/FileDisplay";
+import FileDisplayTrans from "./components/FileDisplayTrans";
+import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
+
 
 const App = () => {
   // const [languages, setLanguages] = useState([]);
@@ -39,9 +42,9 @@ const App = () => {
   //    setSourceLanguage((prev) => targetLanguage);
   //    setTargetLanguage((prev) => sourceLanguage);
   //  };
-
   
   return (
+    <Router>
     <div className="App">
       <Header />
       <SignInDropdown />
@@ -59,8 +62,18 @@ const App = () => {
         sourceLanguage={sourceLanguage}
         targetLanguage={targetLanguage}
       />*/}
-      <FileDisplay/>
+      
+        {/* Routes for different components */}
+        <Routes>
+          <Route path="/" element={<FileDisplay />} />
+          <Route path="/fileDisplayTrans" element={<FileDisplayTrans />} />
+        </Routes>
+
+      {/*<FileDisplay/>*/}
+
     </div>
+    </Router>
+
   );
 };
 

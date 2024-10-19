@@ -82,7 +82,7 @@ const TranslationOptions = ({ /*languages, sourceLanguage, targetLanguage*/ }) =
             type="file"
             id="fileInput"
             multiple
-            accept="audio/mp3"
+            accept="audio/mpeg"
             onChange={handleFileChange}
             style={{ display: "none" }}
           />

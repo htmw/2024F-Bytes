@@ -1,0 +1,71 @@
+    .translator {
+        width: 80%;
+        /*margin: 10px 50px 20px;*/
+        margin: 150px 3% -1em;
+        display: flex;
+        gap: 50px;
+        align-items: center;
+        justify-content: center;
+    }
+  
+  .text-box {
+    min-height: 200px;
+    width: 100%;
+    margin: 20px;
+    padding: 1em;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    font-size: 15px;
+    border-radius: 7px;
+  }
+  
+  textarea {
+    font-family:'Times New Roman', Times, serif;
+    box-shadow: -2px 5px 10px -5px #17121ebf;
+    outline: none;
+    border: none;
+    resize: both;
+    overflow: auto;
+    border: 1px solid black;
+  }
+  
+  .transcription-box {
+    position: relative;
+  }
+    
+  .translate-box {
+    position: relative;
+    display: flex;
+    gap: 30px;
+    /*left: 50px;*/
+    box-shadow: -2px 5px 10px -5px #17121ebf;
+    margin-left: 20%;
+  }
+  
+  .top-row {
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+  
+  .btn-translate,
+  .top-row select {
+    margin-left: auto;
+    width: 9em;
+
+  }
+  
+  @media (max-width: 1279px) {
+    .translator {
+      width: 100%;
+      margin-left: 0%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .translator-container {
+      width: 100%;
+    }
+  
+  }
