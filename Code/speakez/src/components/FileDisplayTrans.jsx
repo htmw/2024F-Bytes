@@ -5,8 +5,9 @@ import './FileDisplayTrans.css';
 import { ALL_LANGUAGES } from './LanguageSelection'
 
 
-export default function FileDisplayTrans() {  
+export default function FileDisplayTrans({result}) {  
     const [toLanguage, setToLanguage] = useState('Select language')
+    const transcribedText = result?.text || (Array.isArray(result) && result.length > 0 ? result[0]?.text : '');
     
     return(
     <div className="FileDisplayTrans">
@@ -20,7 +21,7 @@ export default function FileDisplayTrans() {
                 </div>
                 <form className="transcription-box">
                     <textarea className="text-box"
-                    placeholder=" Transcribed Audio">
+                    value={transcribedText}>
 
                     </textarea>
                 </form>

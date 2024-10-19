@@ -105,7 +105,8 @@ const App = () => {
       <Header />
       <SignInDropdown />
       {result ? (
-        <FileDisplayTrans />
+        //<FileDisplayTrans />
+        <FileDisplayTrans result={result} />
       ) : (
         <FileDisplay
           file={file}
