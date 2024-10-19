@@ -83,6 +83,7 @@ async function sendDownloadingMessage(file, progress, loaded, total) {
   });
 }
 
+// process and transcribe the audio chunks, returns final message of done
 class GenerationTracker {
   constructor(pipeline, stride_length_s) {
     this.pipeline = pipeline;
@@ -95,10 +96,13 @@ class GenerationTracker {
     this.callbackFunctionCounter = 0;
   }
 
+  //sends message when done
   sendFinalResult() {
     self.postMessage({ type: MessageTypes.INFERENCE_DONE });
   }
 
+  // processes every 10th callback to decode the best beam. Beam search algorithm, to decode the sequence
+  // generating multiple beams and keeps the top-performing beams to get the best possible output
   callbackFunction(beams) {
     this.callbackFunctionCounter += 1;
     if (this.callbackFunctionCounter % 10 !== 0) {
@@ -119,7 +123,9 @@ class GenerationTracker {
     createPartialResultMessage(result);
   }
 
+  // decode the automatic speech recognition chunks
   chunkCallback(data) {
+    // add data to the chunks array
     this.chunks.push(data);
     const [text, { chunks }] = this.pipeline.tokenizer._decode_asr(
       this.chunks,
@@ -130,10 +136,12 @@ class GenerationTracker {
       }
     );
 
+    // process each chunk
     this.processed_chunks = chunks.map((chunk, index) => {
       return this.processChunk(chunk, index);
     });
 
+    // create result messages from the processed chunks
     createResultMessage(
       this.processed_chunks,
       false,
@@ -141,12 +149,14 @@ class GenerationTracker {
     );
   }
 
+  // timestamp of the last processed chunk or 0 if no chunks have been processed, called in the chunkCallBack function
   getLastChunkTimestamp() {
     if (this.processed_chunks.length === 0) {
       return 0;
     }
   }
 
+  // text and timestamp takes from the chunk and process each chunk in the chunkCallback function
   processChunk(chunk, index) {
     const { text, timestamp } = chunk;
     const [start, end] = timestamp;
@@ -160,6 +170,7 @@ class GenerationTracker {
   }
 }
 
+// sends results message to the main thread 
 function createResultMessage(results, isDone, completedUntilTimestamp) {
   self.postMessage({
     type: MessageTypes.RESULT,
@@ -169,6 +180,7 @@ function createResultMessage(results, isDone, completedUntilTimestamp) {
   });
 }
 
+// sends partial result message to the main thread
 function createPartialResultMessage(result) {
   self.postMessage({
     type: MessageTypes.RESULT_PARTIAL,

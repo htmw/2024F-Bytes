@@ -1,62 +1,15 @@
 import React, { useState } from "react";
 
-const TranslationOptions = ({ /*languages, sourceLanguage, targetLanguage*/ }) => {
-  // const [inputText, setInputText] = useState("");
-  // const [outputText, setOutputText] = useState("");
+const TranslationOptions = () => {
   const [fileUploadNames, setFileUploadNames] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  //const maxFileSize = 3 * 1024 * 1024; // 3MB
-
-  // const translateText = async () => {
-  //   if (!sourceLanguage || !targetLanguage || !inputText) {
-  //     setOutputText("");
-  //     return;
-  //   }
-
-  //   const apiUrl = "https://libretranslate.com/translate";
-  //   const data = {
-  //     q: inputText,
-  //     source: sourceLanguage,
-  //     target: targetLanguage,
-  //     format: "text",
-  //   };
-
-  //   try {
-  //     const response = await fetch(apiUrl, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const result = await response.json();
-  //     setOutputText(result.translatedText);
-  //   } catch (error) {
-  //     console.error("Error translating text:", error);
-  //     alert("An error occurred while translating.");
-  //   }
-  // };
+  
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     let newFileUploadNames = [];
     let error = "";
-
-    // files.forEach((file) => {
-    //   if (file.size <= maxFileSize && file.type === "audio/mp3") {
-    //     newFileUploadNames.push(file.name);
-    //   } else if (file.size > maxFileSize) {
-    //     error = "Sorry, your file is too large. Maximum limit is 3MB.";
-    //   } else {
-    //     error = 'Please upload files in ".mp3" format only';
-    //   }
-    // });
-
+    
     setFileUploadNames(newFileUploadNames);
     setErrorMessage(error);
     event.target.value = ""; // Clear the input

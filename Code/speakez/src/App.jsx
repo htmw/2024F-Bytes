@@ -1,24 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import SignInDropdown from "./components/SignInDropdown";
-// import LanguageSelection from "./components/LanguageSelection";
-//import TextBoxes from "./components/TextBoxes";
-//import TranslationOptions from "./components/TranslationOptions";
 import "./index.css";
 import FileDisplay from "./components/FileDisplay";
 import FileDisplayTrans from "./components/FileDisplayTrans";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Link,
-  useNavigate,
-} from "react-router-dom";
 import { MessageTypes } from "./utils/reference";
 
 const App = () => {
-  //const [loading, setLoading] = useState(false);
-
   const [downloading, setDownloading] = useState(false);
   const [result, setResult] = useState(null);
   const [done, setDone] = useState(false);
@@ -43,10 +31,6 @@ const App = () => {
           setDownloading(true);
           console.log("DOWNLOADING");
           break;
-        // case "LOADING":
-        //   setLoading(true);
-        //   console.log("LOADING");
-        //   break;
         case "RESULT":
           setResult(e.data.results);
           console.log(e.data.results);
@@ -105,7 +89,6 @@ const App = () => {
       <Header />
       <SignInDropdown />
       {result ? (
-        //<FileDisplayTrans />
         <FileDisplayTrans result={result} />
       ) : (
         <FileDisplay
