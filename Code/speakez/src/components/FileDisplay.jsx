@@ -22,7 +22,7 @@ export default function FileDisplay(props) {
               className="hidden"
               style={{ display: "none" }}
               type="file"
-              accept=".mp3, .wave"
+              accept=".mp3, .wav"
             />
           </label>
           <br></br>a mp3 or wave file
