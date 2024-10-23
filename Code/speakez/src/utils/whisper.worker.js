@@ -11,7 +11,9 @@ class MyTranscriptionPipeline {
   static async getInstance(progress_callback = null) {
     if (this.instance === null) {
       // creates an instance by calling the pipeline function passing the task, model and optional callback to track loading progress
-      this.instance = await pipeline(this.task, null, { progress_callback });
+      this.instance = await pipeline(this.task, "Xenova/whisper-base", {
+        progress_callback,
+      });
     }
 
     return this.instance;
@@ -163,14 +165,14 @@ class GenerationTracker {
 
     return {
       index,
-      text: `${text.trim()}`,
+      text: text.trim(),
       start: Math.round(start),
       end: Math.round(end) || Math.round(start + 0.9 * this.stride_length_s),
     };
   }
 }
 
-// sends results message to the main thread 
+// sends results message to the main thread
 function createResultMessage(results, isDone, completedUntilTimestamp) {
   self.postMessage({
     type: MessageTypes.RESULT,
