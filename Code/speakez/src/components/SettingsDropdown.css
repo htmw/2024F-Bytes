@@ -1,0 +1,55 @@
+/*NEW FILE*/
+
+  .settings-icon {
+    cursor: pointer;
+    font-size: 15px;
+  }
+  
+  .settings-dropdown {
+    position: absolute;
+    top: 100%;
+    right:0;
+    background-color: white;
+    border: 1px solid #ccc;
+    width: 200px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
+  
+  .settings-dropdown ul {
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+  }
+  
+  .settings-dropdown ul li {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .settings-dropdown ul li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .settings-form {
+    padding: 10px;
+    margin-top: 10px;
+  }
+  
+  .settings-form h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .settings-form label,
+  .settings-form select,
+  .settings-form p,
+  .settings-form a {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .settings-form input[type="radio"] {
+    margin-right: 5px;
+  }
+  

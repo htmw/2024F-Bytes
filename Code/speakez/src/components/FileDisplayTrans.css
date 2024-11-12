@@ -80,3 +80,33 @@
     color: #555;
     padding: 0;
   }
+
+
+
+
+
+  /*NEW- Style for the download translate text button*/
+
+  /* Position download button at the bottom center */
+.download-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.download-button {
+  background-color: #313437;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #0056b3;
+}
+
+ 

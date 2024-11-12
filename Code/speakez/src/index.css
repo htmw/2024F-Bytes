@@ -10,6 +10,7 @@ body {
   text-align: center;
 }
 
+
 .logo-image img {
   position: absolute;
   top: 10px;
@@ -117,24 +118,41 @@ select.language-button {
   cursor: pointer;
 }
 
-.right-menu {
+/* .right-menu {
   position: absolute;
   top: 20px;
   right: 20px;
   display: flex;
   align-items: center;
-}
+} */
 
 .sign-in-button {
   background-color: #3a393d;
   border: none;
   border-radius: 35px;
-  padding: 10px 25px;
+  padding: 10px 20px;
   color: white;
   font-size: 18px;
   cursor: pointer;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
+/*NEW*/
+.settings-container {
+  position: absolute;
+  top: 15px;
+  right: 20px; /* Adjust as needed to position the Settings (3-bar) button */
+}
+
+.right-menu {
+  position: absolute;
+  top: 20px;
+  right: 80px; /*Increase right spacing to make room for settings */
+  display: flex;
+  align-items: center;
+}
+
+
 .sign-in-dropdown {
   display: none;
   position: absolute;
@@ -240,3 +258,4 @@ select.language-button {
 .sign-in-button {
   cursor: pointer;
 }
+

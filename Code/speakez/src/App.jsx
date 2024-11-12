@@ -1,15 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
+// NEW -Importing React Router tools to set up page navigation and handle routes in the app.
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import SignInDropdown from "./components/SignInDropdown";
+// NEW- Importing SettingDropdown
+import SettingsDropdown from "./components/SettingsDropdown"; 
 import "./index.css";
 import FileDisplay from "./components/FileDisplay";
 import FileDisplayTrans from "./components/FileDisplayTrans";
 import { MessageTypes } from "./utils/reference";
+//NEW- Importing SignInPage
+import SignInPage from "./components/SignInPage"; 
+
 
 const App = () => {
   const [downloading, setDownloading] = useState(false);
   const [result, setResult] = useState(null);
   const [done, setDone] = useState(false);
+
+  /*New- Uses the useLocation hook from react-router-dom to get the current URL path and related details.
+  Checks if the user is on the "/signin" page.
+  Sets isSignInPage to true if on the Sign-In page, otherwise false.*/
+
+  const location = useLocation(); 
+  const isSignInPage = location.pathname === "/signin";
 
   /*create a worker reference, to get the ml code running in the background*/
   const worker = useRef(null);
@@ -84,22 +98,73 @@ const App = () => {
     });
   };
 
-  return (
-    <div className="App">
-      <Header />
-      <SignInDropdown />
-      {result ? (
-        <FileDisplayTrans result={result} />
-      ) : (
-        <FileDisplay
-          file={file}
-          setFile={setFile}
-          clickTranscribe={clickTranscribe}
-          deleteSelectedFile={deleteSelectedFile}
-        />
-      )}
+//   return (
+//     <div className="App">
+//       <Header />
+//       <SignInDropdown />
+//       {result ? (
+//         <FileDisplayTrans result={result} />
+//       ) : (
+//         <FileDisplay
+//           file={file}
+//           setFile={setFile}
+//           clickTranscribe={clickTranscribe}
+//           deleteSelectedFile={deleteSelectedFile}
+//         />
+//       )}
+//     </div>
+//   );
+// };
+
+// export default App;
+
+// NEW CODES
+return (
+  <div className="App">
+    {/* Display the header component at the top of the app */}
+    <Header />
+
+    {/* Container for settings, which includes the dropdown menu for settings options */}
+    <div className="settings-container">
+      <SettingsDropdown />
     </div>
-  );
+
+    {/* Render SignInDropdown only if not on the SignIn page */}
+    {!isSignInPage && <SignInDropdown />}
+
+   {/* Define routes for navigating between different parts of the app */}
+    <Routes>
+       {/* Home route ("/"): show FileDisplayTrans if result exists, otherwise show FileDisplay */}
+      <Route
+        path="/"
+        element={
+          result ? (
+            <FileDisplayTrans result={result} />
+          ) : (
+            <FileDisplay file={file} setFile={setFile} clickTranscribe={clickTranscribe} deleteSelectedFile={deleteSelectedFile} />
+          )
+        }
+      />
+       {/* Route for the SignIn page ("/signin") */}
+      <Route path="/signin" element={<SignInPage />} />
+    </Routes>
+  </div>
+);
 };
 
-export default App;
+// NEW - AppWrapper component is a wrapper around App to provide Router functionality
+const AppWrapper = () => (
+<Router>
+  <App />
+</Router>
+);
+
+export default AppWrapper;
+
+
+
+
+
+
+
+
