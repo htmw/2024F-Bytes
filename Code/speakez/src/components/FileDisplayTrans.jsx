@@ -37,7 +37,7 @@
 //                             />
 //                         </div>
 //                         <div style={{ marginTop: "10px", textAlign: "center" }}>
-//                             <span style={{ marginRight: "5px" }}>Copy transcribed text:</span>
+//                             <span style={{ marginRight: "5px" }}>Copy :</span>
 //                             <AiOutlineCopy 
 //                                 className="copy-icon" 
 //                                 onClick={() => copyToClipboard(transcribedText)} 
@@ -94,22 +94,23 @@ import { AiOutlineCopy } from 'react-icons/ai';
 import './FileDisplayTrans.css';
 import { ALL_LANGUAGES } from './LanguageSelection';
 
-export default function FileDisplayTrans({ result }) {  
+export default function FileDisplayTrans({ result }) {
     const [toLanguage, setToLanguage] = useState('Select language');
+    const [transcribedCopyStatus, setTranscribedCopyStatus] = useState(false);
+    const [translatedCopyStatus, setTranslatedCopyStatus] = useState(false);
     const transcribedText = result?.text || (Array.isArray(result) && result.length > 0 ? result[0]?.text : '');
 
-    // Function to copy the text from the textarea
-    const copyToClipboard = (text) => {
+    const copyToClipboard = (text, setCopyStatus) => {
         navigator.clipboard.writeText(text)
             .then(() => {
-                alert("Text copied to clipboard!"); // Optional: Notify the user
+                setCopyStatus(true); // Show "Copied!" text
+                setTimeout(() => setCopyStatus(false), 2000); // Hide "Copied!" after 2 seconds
             })
             .catch(err => {
                 console.error("Failed to copy: ", err); // Handle error
             });
     };
 
-    // NEW- Function to download the translated text
     const downloadTranslatedText = () => {
         const element = document.createElement("a");
         const file = new Blob([/* translated text here */], { type: "text/plain" });
@@ -131,20 +132,25 @@ export default function FileDisplayTrans({ result }) {
                         </button>
                     </div>
                     <form className="transcription-box">
-                        <div className="text-boxes"> {/* Use your existing styles */}
-                            <textarea
-                                className="text-box"
-                                value={transcribedText}
-                                readOnly // Make it read-only to prevent editing
-                            />
-                        </div>
-                        <div style={{ marginTop: "10px", textAlign: "center" }}>
-                            <span style={{ marginRight: "5px" }}>Copy transcribed text:</span>
-                            <AiOutlineCopy 
-                                className="copy-icon" 
-                                onClick={() => copyToClipboard(transcribedText)} 
-                                style={{ cursor: "pointer", fontSize: "20px" }} 
-                            />
+                        <div className="text-boxes">
+                            <div className="text-box-container">
+                                <textarea
+                                    className="text-box"
+                                    value={transcribedText}
+                                    readOnly
+                                />
+                                <div className="inside-copy">
+                                    {transcribedCopyStatus ? (
+                                        <span>Copied!</span>
+                                    ) : (
+                                        <AiOutlineCopy
+                                            className="copy-icon"
+                                            onClick={() => copyToClipboard(transcribedText, setTranscribedCopyStatus)}
+                                            style={{ cursor: "pointer", fontSize: "20px", marginLeft: "5px" }}
+                                        />
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -152,39 +158,42 @@ export default function FileDisplayTrans({ result }) {
                 {/* Translated Section */}
                 <div className="translatedSection">
                     <div className="top-row">
-                        <select 
-                            value={toLanguage} 
-                            className='sign-in-button' 
+                        <select
+                            value={toLanguage}
+                            className='Select-language-button'
                             onChange={(event) => setToLanguage(event.target.value)}
                         >
                             <option value={'Select language'}>Select language</option>
-                            {Object.entries(ALL_LANGUAGES).map(([key, value]) => {
-                                return (
-                                    <option key={key} value={value}>{key}</option>
-                                );
-                            })}
+                            {Object.entries(ALL_LANGUAGES).map(([key, value]) => (
+                                <option key={key} value={value}>{key}</option>
+                            ))}
                         </select>
                     </div>
-                    <div className="text-boxes"> {/* Use your existing styles */}
-                        <textarea 
-                            className="text-box translate-box" 
-                            readOnly
-                        >
-                            Select Language
-                        </textarea>
-                    </div>
-                    <div style={{ marginTop: "10px", textAlign: "center" }}>
-                        <span style={{ marginRight: "5px" }}>Copy translated text:</span>
-                        <AiOutlineCopy 
-                            className="copy-icon" 
-                            onClick={() => copyToClipboard("Select Language")} // Change this to the actual translated text when available
-                            style={{ cursor: "pointer", fontSize: "20px" }} 
-                        />
+                    <div className="text-boxes">
+                        <div className="text-box-container">
+                            <textarea
+                                className="text-box translate-box"
+                                readOnly
+                            >
+                                Select Language
+                            </textarea>
+                            <div className="inside-copy">
+                                {translatedCopyStatus ? (
+                                    <span>Copied!</span>
+                                ) : (
+                                    <AiOutlineCopy
+                                        className="copy-icon"
+                                        onClick={() => copyToClipboard("Select Language", setTranslatedCopyStatus)}
+                                        style={{ cursor: "pointer", fontSize: "20px", marginLeft: "5px" }}
+                                    />
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* NEW - Download Button */}
+            {/* Download Button */}
             <div className="download-button-container">
                 <button className="download-button" onClick={downloadTranslatedText}>
                     Download Translated Text
@@ -193,4 +202,3 @@ export default function FileDisplayTrans({ result }) {
         </div>
     );
 }
-
