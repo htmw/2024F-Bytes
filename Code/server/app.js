@@ -19,7 +19,7 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "Audio file is required" });
   }
-
+  //audio, sr = librosa.load(file_path, sr=16000)
   const tempFilePath = path.join(os.tmpdir(), `audio_${Date.now()}`);
 
   fs.writeFile(tempFilePath, req.file.buffer, (err) => {

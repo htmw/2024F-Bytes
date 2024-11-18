@@ -7,15 +7,29 @@ const HomeComponent = () => {
   const [output, setOutput] = useState();
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [copyMessage, setCopyMessage] = useState("");
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     if (files.length > 0) {
-      setFileName(files[0].name);
-      setFile(files[0]);
-      setErrorMessage("");
+      const selectedFile = files[0];
+      // Check if file is an MP3 and its size is less than or equal to 20MB
+      if (selectedFile.type !== "audio/mpeg") {
+        setErrorMessage("Please upload an MP3 file.");
+        setFile(null);
+        setFileName("");
+      } else if (selectedFile.size > 20 * 1024 * 1024) {
+        // 20MB in bytes
+        setErrorMessage("File size should be less than 20MB.");
+        setFile(null);
+        setFileName("");
+      } else {
+        setFileName(selectedFile.name);
+        setFile(selectedFile);
+        setErrorMessage("");
+      }
     }
     event.target.value = "";
   };
@@ -24,9 +38,22 @@ const HomeComponent = () => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
     if (files.length > 0) {
-      setFileName(files[0].name);
-      setFile(files[0]);
-      setErrorMessage("");
+      const selectedFile = files[0];
+      // Check if file is an MP3 and its size is less than or equal to 20MB
+      if (selectedFile.type !== "audio/mpeg") {
+        setErrorMessage("Please upload an MP3 file.");
+        setFile(null);
+        setFileName("");
+      } else if (selectedFile.size > 20 * 1024 * 1024) {
+        // 20MB in bytes
+        setErrorMessage("File size should be less than 20MB.");
+        setFile(null);
+        setFileName("");
+      } else {
+        setFileName(selectedFile.name);
+        setFile(selectedFile);
+        setErrorMessage("");
+      }
     } else {
       setErrorMessage("No files dropped.");
     }
@@ -66,6 +93,11 @@ const HomeComponent = () => {
   };
 
   const startRecording = async () => {
+    setFileName("");
+    setFile(null);
+    setErrorMessage("");
+    setOutput(null);
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorderRef.current = new MediaRecorder(stream);
@@ -98,9 +130,40 @@ const HomeComponent = () => {
     }
   };
 
+  const handleCopy = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCopyMessage("Text copied to clipboard!");
+        setTimeout(() => setCopyMessage(""), 2000);
+      })
+      .catch((err) => {
+        console.error("Error copying text: ", err);
+      });
+  };
+
+  const handleDownloadBoth = () => {
+    if (output) {
+      const content = `Transcription:\n${output.transcription}\n\nTranslation:\n${output.translation}`;
+      const blob = new Blob([content], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${fileName.split(".")[0]}_output.txt`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 overflow-hidden">
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-xl">
+      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative">
+        {copyMessage && (
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+            {copyMessage}
+          </div>
+        )}
+
         <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
           <div
             id="drop-area"
@@ -125,7 +188,6 @@ const HomeComponent = () => {
             />
           </div>
 
-          {/* Microphone Button for Recording */}
           <div className="flex justify-center md:justify-start">
             {isRecording ? (
               <button
@@ -187,21 +249,41 @@ const HomeComponent = () => {
           </button>
         </div>
 
-        <div className="mt-8 flex space-x-6">
-          <div className="flex-1 overflow-hidden">
+        <div className="mt-8 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+          <div className="flex-1 overflow-hidden relative">
             {output?.transcription && (
               <div className="border-2 border-gray-300 p-4 rounded-md bg-gray-50 h-full">
-                <h3 className="text-lg font-semibold mb-2">Input:</h3>
+                <h3 className="text-lg font-semibold mb-2">Transcription:</h3>
                 <p className="overflow-auto">{output.transcription}</p>
+                <button
+                  onClick={() => handleCopy(output.transcription)}
+                  className="absolute top-2 right-2 text-indigo-500 hover:text-indigo-600"
+                >
+                  <i className="fas fa-copy"></i>
+                </button>
               </div>
             )}
           </div>
 
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden relative">
             {output?.translation && (
               <div className="border-2 border-gray-300 p-4 rounded-md bg-gray-50 h-full">
-                <h3 className="text-lg font-semibold mb-2">Output:</h3>
+                <h3 className="text-lg font-semibold mb-2">Translation:</h3>
                 <p className="overflow-auto">{output.translation}</p>
+                <div className="absolute top-2 right-2 flex space-x-4">
+                  <button
+                    onClick={() => handleCopy(output.translation)}
+                    className="text-indigo-500 hover:text-indigo-600"
+                  >
+                    <i className="fas fa-copy"></i>
+                  </button>
+                  <button
+                    onClick={handleDownloadBoth}
+                    className="text-indigo-500 py-1 px-2 rounded-md"
+                  >
+                    <i className="fas fa-download"></i>
+                  </button>
+                </div>
               </div>
             )}
           </div>
