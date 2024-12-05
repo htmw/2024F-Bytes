@@ -1,13 +1,17 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import HistoryComponent from "./HistoryComponent";
+import languages from "./languages.json";
 
 const HomeComponent = () => {
   const [fileName, setFileName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [file, setFile] = useState();
-  const [output, setOutput] = useState();
+  const [output, setOutput] = useState({});
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [copyMessage, setCopyMessage] = useState("");
+  const [isHistoryVisible, setIsHistoryVisible] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
 
@@ -68,6 +72,8 @@ const HomeComponent = () => {
     try {
       const formData = new FormData();
       formData.append("audioFile", file);
+      formData.append("language", selectedLanguage);
+      formData.append("content", JSON.stringify(output));
       const response = await fetch("http://localhost:3000/transcribe", {
         method: "POST",
         body: formData,
@@ -84,6 +90,30 @@ const HomeComponent = () => {
       setLoading(false);
     }
   };
+  const handleLanguageChange = (event) => {
+    setSelectedLanguage(event.target.value);
+  };
+  const toggleFavorite = () => {
+    setIsFavorite((prev) => !prev);
+
+    if (!isFavorite && output?.transcription) {
+      fetch("http://localhost:3000/favorite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transcription: output.transcription,
+          fileName: fileName,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Favorite saved successfully:", data);
+        })
+        .catch((error) => {
+          console.error("Error saving favorite:", error);
+        });
+    }
+  };
 
   const deleteFile = () => {
     setFileName("");
@@ -96,7 +126,7 @@ const HomeComponent = () => {
     setFileName("");
     setFile(null);
     setErrorMessage("");
-    setOutput(null);
+    setOutput({});
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -155,8 +185,12 @@ const HomeComponent = () => {
     }
   };
 
+  const toggleHistory = () => {
+    setIsHistoryVisible((prev) => !prev);
+  };
+
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100 overflow-hidden">
+    <div className="flex items-center justify-center h-screen bg-gray-100 overflow-hidden relative">
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative">
         {copyMessage && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
@@ -224,7 +258,26 @@ const HomeComponent = () => {
             </p>
           )}
         </div>
-
+        <div className="mt-4">
+          <label
+            htmlFor="languageSelect"
+            className="block text-sm font-semibold text-gray-700"
+          >
+            Output Language
+          </label>
+          <select
+            id="languageSelect"
+            className="w-full py-2 px-4 mt-2 rounded-md border-gray-300"
+            onChange={handleLanguageChange}
+            value={selectedLanguage}
+          >
+            {Object.keys(languages).map((langName) => (
+              <option key={langName} value={languages[langName]}>
+                {langName}
+              </option>
+            ))}
+          </select>
+        </div>
         {errorMessage && (
           <div className="mt-4 text-red-500 text-sm text-center">
             {errorMessage}
@@ -235,17 +288,20 @@ const HomeComponent = () => {
           <button
             onClick={translate}
             className={`w-full py-2 px-4 rounded-md shadow text-white ${
-              fileName
-                ? "bg-indigo-500 hover:bg-indigo-600"
-                : "bg-gray-300 cursor-not-allowed"
+              loading ? "bg-gray-500" : "bg-indigo-500 hover:bg-indigo-600"
             }`}
-            disabled={!fileName || loading}
+            disabled={loading}
           >
-            {loading ? (
-              <div className="animate-spin border-t-2 border-white w-6 h-6 rounded-full"></div>
-            ) : (
-              "Translate"
-            )}
+            {loading ? "Translating..." : "Translate"}
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <button
+            onClick={toggleHistory}
+            className="w-full py-2 px-4 rounded-md bg-indigo-500 text-white hover:bg-indigo-600"
+          >
+            {isHistoryVisible ? "Hide History" : "Show History"}
           </button>
         </div>
 
@@ -288,6 +344,14 @@ const HomeComponent = () => {
             )}
           </div>
         </div>
+      </div>
+
+      <div
+        className={`absolute top-0 right-0 w-64 h-full bg-white shadow-xl z-20 transform transition-all duration-300 ${
+          isHistoryVisible ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <HistoryComponent />
       </div>
     </div>
   );

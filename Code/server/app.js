@@ -16,34 +16,51 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/transcribe", upload.single("audioFile"), (req, res) => {
+  const { language } = req.body;
+  let content = {};
+  if (req.body.content) {
+    content = JSON.parse(req.body.content);
+  }
   if (!req.file) {
     return res.status(400).json({ error: "Audio file is required" });
   }
-  //audio, sr = librosa.load(file_path, sr=16000)
-  const tempFilePath = path.join(os.tmpdir(), `audio_${Date.now()}`);
 
-  fs.writeFile(tempFilePath, req.file.buffer, (err) => {
+  const tempFilePath = path.join(os.tmpdir(), `audio_${Date.now()}.wav`);
+
+  // Save the audio file temporarily
+  fs.writeFile(tempFilePath, req.file.buffer, async (err) => {
     if (err) {
       return res.status(500).json({ error: "Failed to save audio file" });
     }
 
-    transcribeAndTranslate(tempFilePath)
-      .then((response) => {
-        fs.unlink(tempFilePath, (err) => {
-          if (err) console.error("Error deleting file:", err);
-        });
-        res.json(response);
-      })
-      .catch((err) => {
-        console.error("Error during transcription and translation:", err);
-        fs.unlink(tempFilePath, (err) => {
-          if (err) console.error("Error deleting file:", err);
-        });
-        res.status(500).json({ error: "Transcription or translation failed" });
+    try {
+      // Transcribe and translate the audio file
+      if (!content.translation) {
+        content = await transcribeAndTranslate(tempFilePath);
+      }
+
+      // Handle translation if a target language is specified
+      if (language !== "en") {
+        const translatedText = await translateText(
+          content.translation,
+          "en",
+          language
+        );
+        content.translation = translatedText;
+      }
+      res.json(content);
+    } catch (error) {
+      res.status(500).json({ error: error.message || "Internal server error" });
+    } finally {
+      // Delete the temporary file
+      fs.unlink(tempFilePath, (err) => {
+        // if (err) console.error("Error deleting temporary file:", err);
       });
+    }
   });
 });
 
+// Function to handle audio transcription and initial translation
 const transcribeAndTranslate = (filePath) => {
   return new Promise((resolve, reject) => {
     const pythonProcess = spawn("python3", ["helper.py", filePath]);
@@ -55,18 +72,62 @@ const transcribeAndTranslate = (filePath) => {
     });
 
     pythonProcess.stderr.on("data", (data) => {
-      console.error("Error:", data.toString());
+      //console.error("Error from Python script:", data.toString());
     });
 
     pythonProcess.on("close", (code) => {
       if (code !== 0) {
-        return reject("Error: Transcription and translation process failed");
+        return reject(
+          new Error("Transcription and translation process failed")
+        );
       }
       try {
         const parsedResponse = JSON.parse(response);
         resolve(parsedResponse);
       } catch (error) {
-        reject("Error parsing response");
+        reject(new Error("Error parsing transcription response"));
+      }
+    });
+  });
+};
+
+// Function to handle text translation
+const translateText = (text, sourceLang, targetLang) => {
+  return new Promise((resolve, reject) => {
+    const pythonProcess = spawn("python3", [
+      "helper.py",
+      "--text",
+      text,
+      "--source",
+      sourceLang,
+      "--target",
+      targetLang,
+    ]);
+
+    let response = "";
+
+    pythonProcess.stdout.on("data", (data) => {
+      response += data.toString();
+    });
+
+    pythonProcess.stderr.on("data", (data) => {
+      // console.error("Error from Python script:", data.toString());
+    });
+
+    pythonProcess.on("close", (code) => {
+      if (code !== 0) {
+        return reject(new Error("Text translation process failed"));
+      }
+      try {
+        const parsedResponse = JSON.parse(response);
+        if (!parsedResponse.success) {
+          // Handle failure response from Python
+          return reject(new Error(parsedResponse.error));
+        }
+
+        resolve(parsedResponse.translation);
+      } catch (error) {
+        reject(new Error("Error parsing translation response"));
       }
     });
   });
