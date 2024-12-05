@@ -62,6 +62,6 @@ if __name__ == "__main__":
     else:
         file_path = sys.argv[1].strip()
         original_text, translated_text = transcribe_and_translate_audio(file_path)
-        print(json.dumps({"transcription": original_text, "translation": translated_text}))
+        print(json.dumps({"transcription": original_text, "translation": translated_text,"english_translation":translated_text}))
         if os.path.exists(file_path):
             os.remove(file_path)

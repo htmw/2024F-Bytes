@@ -19,6 +19,7 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
   const { language } = req.body;
   let content = {};
   if (req.body.content) {
+    console.log(req.body.content);
     content = JSON.parse(req.body.content);
   }
   if (!req.file) {
@@ -35,14 +36,14 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
 
     try {
       // Transcribe and translate the audio file
-      if (!content.translation) {
+      if (!content.english_translation || content.english_translation != "") {
         content = await transcribeAndTranslate(tempFilePath);
       }
 
       // Handle translation if a target language is specified
       if (language !== "en") {
         const translatedText = await translateText(
-          content.translation,
+          content.english_translation,
           "en",
           language
         );
