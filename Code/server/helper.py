@@ -13,9 +13,11 @@ def transcribe_and_translate_audio(file_path):
     # Explicitly set the device
     device = "cpu"  # Or use "cuda" if you have GPU support, but since you're using CPU:
     model = whisper.load_model("base", device=device)
+    print("loaded the model")
     
     # Load audio with librosa
     audio, sr = librosa.load(file_path, sr=16000)
+    print("loaded the audio")
 
     try:
         # Transcribe original audio
