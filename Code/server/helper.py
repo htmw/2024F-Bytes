@@ -2,6 +2,7 @@ import whisper
 import torch  # Make sure to import torch for device handling
 import librosa
 import json
+import sys
 import os
 from utils.language_mapping import translation_languages
 from transformers import pipeline
