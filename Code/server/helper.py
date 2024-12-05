@@ -1,5 +1,5 @@
 import whisper
-import sys
+import torch  # Make sure to import torch for device handling
 import librosa
 import json
 import os
@@ -7,17 +7,28 @@ from utils.language_mapping import translation_languages
 from transformers import pipeline
 
 def transcribe_and_translate_audio(file_path):
-    file_path = file_path.strip() 
-    model = whisper.load_model("base", device="cpu")
+    file_path = file_path.strip()
     
+    # Explicitly set the device
+    device = "cpu"  # Or use "cuda" if you have GPU support, but since you're using CPU:
+    model = whisper.load_model("base", device=device)
+    
+    # Load audio with librosa
     audio, sr = librosa.load(file_path, sr=16000)
 
-    transcription_result = model.transcribe(audio)
-    original_text = transcription_result['text']
-    
-    translation_result = model.transcribe(audio, task="translate")
-    translated_text = translation_result['text']
-    
+    try:
+        # Transcribe original audio
+        transcription_result = model.transcribe(audio)
+        original_text = transcription_result['text']
+        
+        # Translate the audio (optional task, may not always be available in every model)
+        translation_result = model.transcribe(audio, task="translate")
+        translated_text = translation_result['text']
+        
+    except Exception as e:
+        # Return an error if transcription fails
+        return {"error": f"Error during transcription/translation: {str(e)}"}
+
     return original_text, translated_text
 
 
@@ -61,7 +72,14 @@ if __name__ == "__main__":
         print(json.dumps(translated_text))
     else:
         file_path = sys.argv[1].strip()
-        original_text, translated_text = transcribe_and_translate_audio(file_path)
-        print(json.dumps({"transcription": original_text, "translation": translated_text,"english_translation":translated_text}))
+        result = transcribe_and_translate_audio(file_path)
+
+        # Handle potential error in transcription/translation
+        if "error" in result:
+            print(json.dumps({"error": result["error"]}))
+        else:
+            original_text, translated_text = result
+            print(json.dumps({"transcription": original_text, "translation": translated_text, "english_translation": translated_text}))
+        
         if os.path.exists(file_path):
             os.remove(file_path)
