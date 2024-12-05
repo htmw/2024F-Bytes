@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "build": "echo 'no build step required'"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +22,10 @@
     "form-data": "^4.0.1",
     "fs": "^0.0.1-security",
     "multer": "^1.4.5-lts.1",
-    "openai": "^4.71.1",
-    "server": "file:"
+    "openai": "^4.71.1"
+  },
+  "engines": {
+    "node": "14.x",
+    "npm": "10.x"
   }
 }
