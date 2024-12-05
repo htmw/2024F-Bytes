@@ -94,7 +94,7 @@ const transcribeAndTranslate = (filePath) => {
 // Function to handle text translation
 const translateText = (text, sourceLang, targetLang) => {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn("python3", [
+    const pythonProcess = spawn("python", [
       "helper.py",
       "--text",
       text,

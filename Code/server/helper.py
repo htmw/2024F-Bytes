@@ -1,5 +1,4 @@
 import whisper
-import torch  # Make sure to import torch for device handling
 import librosa
 import json
 import sys
@@ -10,14 +9,10 @@ from transformers import pipeline
 def transcribe_and_translate_audio(file_path):
     file_path = file_path.strip()
     
-    # Explicitly set the device
-    device = "cpu"  # Or use "cuda" if you have GPU support, but since you're using CPU:
-    model = whisper.load_model("base", device=device)
-    print("loaded the model")
+    model = whisper.load_model("base")
     
     # Load audio with librosa
     audio, sr = librosa.load(file_path, sr=16000)
-    print("loaded the audio")
 
     try:
         # Transcribe original audio
