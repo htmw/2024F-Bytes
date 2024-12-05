@@ -8,7 +8,7 @@ from transformers import pipeline
 
 def transcribe_and_translate_audio(file_path):
     file_path = file_path.strip() 
-    model = whisper.load_model("base")
+    model = whisper.load_model("base", device="cpu")
     
     audio, sr = librosa.load(file_path, sr=16000)
 
