@@ -19,7 +19,6 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
   const { language } = req.body;
   let content = {};
   if (req.body.content) {
-    console.log(req.body.content);
     content = JSON.parse(req.body.content);
   }
   if (!req.file) {
@@ -64,7 +63,7 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
 // Function to handle audio transcription and initial translation
 const transcribeAndTranslate = (filePath) => {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn("python3", ["helper.py", filePath]);
+    const pythonProcess = spawn("python", ["helper.py", filePath]);
 
     let response = "";
 
@@ -73,7 +72,7 @@ const transcribeAndTranslate = (filePath) => {
     });
 
     pythonProcess.stderr.on("data", (data) => {
-      //console.error("Error from Python script:", data.toString());
+      console.error("Error from Python script:", data.toString());
     });
 
     pythonProcess.on("close", (code) => {
@@ -112,7 +111,7 @@ const translateText = (text, sourceLang, targetLang) => {
     });
 
     pythonProcess.stderr.on("data", (data) => {
-      // console.error("Error from Python script:", data.toString());
+      console.error("Error from Python script:", data.toString());
     });
 
     pythonProcess.on("close", (code) => {
