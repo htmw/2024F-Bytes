@@ -1,4 +1,5 @@
 import whisper
+import torch  # Make sure to import torch for device handling
 import librosa
 import json
 import sys

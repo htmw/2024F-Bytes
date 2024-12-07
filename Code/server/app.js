@@ -63,7 +63,7 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
 // Function to handle audio transcription and initial translation
 const transcribeAndTranslate = (filePath) => {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn("python", ["helper.py", filePath]);
+    const pythonProcess = spawn("python3", ["helper.py", filePath]);
 
     let response = "";
 
@@ -94,7 +94,7 @@ const transcribeAndTranslate = (filePath) => {
 // Function to handle text translation
 const translateText = (text, sourceLang, targetLang) => {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn("python", [
+    const pythonProcess = spawn("python3", [
       "helper.py",
       "--text",
       text,
