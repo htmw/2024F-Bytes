@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import HistoryComponent from "./HistoryComponent";
 import languages from "./languages.json";
-import { useTheme } from "./ThemeContext"; // Import useTheme
 
 const HomeComponent = () => {
   const [fileName, setFileName] = useState("");
@@ -15,7 +14,6 @@ const HomeComponent = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
-  const { isDarkMode } = useTheme();
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -194,14 +192,9 @@ const HomeComponent = () => {
     setIsHistoryVisible((prev) => !prev);
   };
 
-    // Apply different background and text colors based on isDarkMode
-    const containerStyle = isDarkMode
-    ? "bg-gray-700 text-white"
-    : "bg-white text-gray-600";
-
   return (
-    <div className={`flex items-center justify-center h-screen overflow-hidden relative ${containerStyle}`}>
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative ">
+    <div className="flex items-center justify-center h-screen bg-gray-100 overflow-hidden relative">
+      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative">
         {copyMessage && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
             {copyMessage}
