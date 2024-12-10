@@ -7,22 +7,11 @@ const upload = multer();
 
 const resourceRouter = express.Router();
 
-resourceRouter.post("/history", upload.none(), async (req, res) => {
+resourceRouter.get("/history", upload.none(), async (req, res) => {
     const email = req.body.email;
-    const sourceLang = req.body.sourceLang;
-    const targetLang = req.body.targetLang;
-    const sourceData = req.body.sourceData;
-    const targetData = req.body.targetData;
     const sanitizedEmail = sanitizeEmailForFirebase(email);
-    const englishTranslation = req.body.englishTranslation;
-    const favourite = false;
-    const data = { sourceLang, targetLang, sourceData, 
-        targetData, englishTranslation, favourite};
     try {
-        const historyRef = ref(
-            database, `users/${sanitizedEmail}/history`);
-        await push(historyRef, data);
-
+        const historyRef = ref(database, `users/${sanitizedEmail}/history`);
         const snapshot = await get(historyRef);
         const history = snapshot.exists() ? snapshot.val() : null;
         

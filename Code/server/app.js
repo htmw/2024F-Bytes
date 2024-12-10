@@ -8,6 +8,9 @@ const os = require("os");
 const cors = require("cors");
 const accountRouter = require("./routers/accountRouter");
 const resourceRouter = require("./routers/resourceRouter");
+const sanitizeEmailForFirebase = require("./utils/sanitizeEmail");
+const { ref, set, push, get } = require('firebase/database');
+const database = require("./firebase-config");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -54,6 +57,8 @@ app.use("/api/", resourceRouter);
 
 
 app.post("/transcribe", upload.single("audioFile"), (req, res) => {
+  const email = req.body.email;
+  const sanitizedEmail = sanitizeEmailForFirebase(email);
   const { language } = req.body;
   let content = {};
   if (req.body.content) {
@@ -86,6 +91,12 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
         );
         content.translation = translatedText;
       }
+
+      // adding the content to the history
+      const historyRef = ref(database, `users/${sanitizedEmail}/history`);
+      const newEntryRef = await push(historyRef, data);
+      const newEntryId = newEntryRef.key;
+      content.id = newEntryId;
       res.json(content);
     } catch (error) {
       res.status(500).json({ error: error.message || "Internal server error" });
