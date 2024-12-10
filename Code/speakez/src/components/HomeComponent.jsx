@@ -74,10 +74,13 @@ const HomeComponent = () => {
       formData.append("audioFile", file);
       formData.append("language", selectedLanguage);
       formData.append("content", JSON.stringify(output));
-      const response = await fetch("http://localhost:3000/transcribe", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://speakez-server.uk.r.appspot.com/transcribe",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       if (response.ok) {
         const res = await response.json();
         setOutput(res);
@@ -97,7 +100,7 @@ const HomeComponent = () => {
     setIsFavorite((prev) => !prev);
 
     if (!isFavorite && output?.transcription) {
-      fetch("http://localhost:3000/favorite", {
+      fetch("/favorite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -288,9 +291,11 @@ const HomeComponent = () => {
           <button
             onClick={translate}
             className={`w-full py-2 px-4 rounded-md shadow text-white ${
-              loading ? "bg-gray-500" : "bg-indigo-500 hover:bg-indigo-600"
+              loading || !file
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-indigo-500 hover:bg-indigo-600"
             }`}
-            disabled={loading}
+            disabled={loading || !file}
           >
             {loading ? "Translating..." : "Translate"}
           </button>
