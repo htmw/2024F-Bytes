@@ -6,6 +6,8 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const cors = require("cors");
+const accountRouter = require("./routers/accountRouter");
+const resourceRouter = require("./routers/resourceRouter");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -13,7 +15,43 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());  
+
+
+// root api
+app.get("/", (req, res) => {
+  const pythonProcess = spawn("python3", ["test.py"]);
+
+  let response = "";
+
+  pythonProcess.stdout.on("data", (data) => {
+    response += data.toString();
+  });
+
+  pythonProcess.stderr.on("data", (data) => {
+    console.error("Error from Python script:", data.toString());
+  });
+
+  pythonProcess.on("close", (code) => {
+    if (code !== 0) {
+      return res.status(500).send({ error: "Failed while testing" });
+    }
+    try {
+      const parsedResponse = JSON.parse(response);
+      res.json(parsedResponse);
+    } catch (error) {
+      res.status(500).send({ error: "Error while parsing response" });
+    }
+  });
+});
+
+// account api 
+app.use("/api/",  accountRouter);
+
+// resource api
+app.use("/api/", resourceRouter);
+
 
 app.post("/transcribe", upload.single("audioFile"), (req, res) => {
   const { language } = req.body;

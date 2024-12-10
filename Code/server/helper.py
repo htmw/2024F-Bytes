@@ -1,11 +1,12 @@
 import whisper
-import torch  # Make sure to import torch for device handling
+# import torch  
 import librosa
 import json
 import sys
 import os
 from utils.language_mapping import translation_languages
 from transformers import pipeline
+import json
 
 def transcribe_and_translate_audio(file_path):
     file_path = file_path.strip()
