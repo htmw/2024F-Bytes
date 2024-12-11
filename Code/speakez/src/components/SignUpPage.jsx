@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-function SignInPage() {
+function SignUpPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -23,11 +23,14 @@ function SignInPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://speakez-server.uk.r.appspot.com/api/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
       const responseData = await response.json();
       if (response.ok) {
         setErr("");
@@ -131,4 +134,4 @@ function SignInPage() {
   );
 }
 
-export default SignInPage;
+export default SignUpPage;

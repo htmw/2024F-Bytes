@@ -9,7 +9,7 @@ const cors = require("cors");
 const accountRouter = require("./routers/accountRouter");
 const resourceRouter = require("./routers/resourceRouter");
 const sanitizeEmailForFirebase = require("./utils/sanitizeEmail");
-const { ref, set, push, get } = require('firebase/database');
+const { ref, set, push, get } = require("firebase/database");
 const database = require("./firebase-config");
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -19,8 +19,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());  
-
+app.use(cors());
 
 // root api
 app.get("/", (req, res) => {
@@ -49,15 +48,14 @@ app.get("/", (req, res) => {
   });
 });
 
-// account api 
-app.use("/api/",  accountRouter);
+// account api
+app.use("/api/", accountRouter);
 
 // resource api
 app.use("/api/", resourceRouter);
 
-
 app.post("/transcribe", upload.single("audioFile"), (req, res) => {
-  const email = req.body.email;
+  const { email } = req.body;
   const sanitizedEmail = sanitizeEmailForFirebase(email);
   const { language } = req.body;
   let content = {};
@@ -78,23 +76,23 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
 
     try {
       // Transcribe and translate the audio file
-      if (!content.english_translation || content.english_translation != "") {
+      if (!content.englishTranslation || content.englishTranslation != "") {
         content = await transcribeAndTranslate(tempFilePath);
       }
 
       // Handle translation if a target language is specified
       if (language !== "en") {
         const translatedText = await translateText(
-          content.english_translation,
+          content.englishTranslation,
           "en",
           language
         );
         content.translation = translatedText;
       }
-
-      // adding the content to the history
+      content.destinationLanguage = language;
+      content.favourite = false;
       const historyRef = ref(database, `users/${sanitizedEmail}/history`);
-      const newEntryRef = await push(historyRef, data);
+      const newEntryRef = await push(historyRef, content);
       const newEntryId = newEntryRef.key;
       content.id = newEntryId;
       res.json(content);

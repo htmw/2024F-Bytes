@@ -9,26 +9,11 @@ function Header() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:8000/logout", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        navigate("/");
-        localStorage.removeItem("loggedEmail");
-        localStorage.removeItem("firstName");
-        localStorage.removeItem("lastName");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    localStorage.removeItem("loggedEmail");
+    navigate("/login");
   };
 
-  const isLoggedIn = localStorage.getItem("loggedEmail") || true;
-  const firstName = localStorage.getItem("firstName") || "Team";
+  const isLoggedIn = localStorage.getItem("loggedEmail");
 
   return (
     <header
@@ -60,11 +45,6 @@ function Header() {
         >
           {isLoggedIn && (
             <>
-              <li>
-                <span className="block py-2 px-4 md:text-left">
-                  Hello {firstName}
-                </span>
-              </li>
               <li>
                 <button
                   onClick={handleLogout}
