@@ -20,8 +20,8 @@ const FavoriteComponent = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
-          if (Object.keys(data.data).length != 0) setFavorites(data.data); // Assuming data is an array of objects { input, output }
+          if (Object.keys(data.data).length != 0) setFavorites(data.data);
+          else setFavorites([]); // Assuming data is an array of objects { input, output }
         } else {
           setErrorMessage("Failed to fetch favorites.");
         }

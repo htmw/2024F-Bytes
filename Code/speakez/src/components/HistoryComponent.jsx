@@ -24,6 +24,7 @@ const HistoryComponent = () => {
         if (response.ok) {
           const data = await response.json();
           if (Object.keys(data.data).length != 0) setHistory(data.data);
+          else setHistory([]);
         } else {
           setErrorMessage("Failed to fetch translation history.");
         }
