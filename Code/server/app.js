@@ -6,6 +6,11 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const cors = require("cors");
+const accountRouter = require("./routers/accountRouter");
+const resourceRouter = require("./routers/resourceRouter");
+const sanitizeEmailForFirebase = require("./utils/sanitizeEmail");
+const { ref, set, push, get } = require("firebase/database");
+const database = require("./firebase-config");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -13,9 +18,45 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+// root api
+app.get("/", (req, res) => {
+  const pythonProcess = spawn("python3", ["test.py"]);
+
+  let response = "";
+
+  pythonProcess.stdout.on("data", (data) => {
+    response += data.toString();
+  });
+
+  pythonProcess.stderr.on("data", (data) => {
+    console.error("Error from Python script:", data.toString());
+  });
+
+  pythonProcess.on("close", (code) => {
+    if (code !== 0) {
+      return res.status(500).send({ error: "Failed while testing" });
+    }
+    try {
+      const parsedResponse = JSON.parse(response);
+      res.json(parsedResponse);
+    } catch (error) {
+      res.status(500).send({ error: "Error while parsing response" });
+    }
+  });
+});
+
+// account api
+app.use("/api/", accountRouter);
+
+// resource api
+app.use("/api/", resourceRouter);
+
 app.post("/transcribe", upload.single("audioFile"), (req, res) => {
+  const { email } = req.body;
+  const sanitizedEmail = sanitizeEmailForFirebase(email);
   const { language } = req.body;
   let content = {};
   if (req.body.content) {
@@ -35,19 +76,25 @@ app.post("/transcribe", upload.single("audioFile"), (req, res) => {
 
     try {
       // Transcribe and translate the audio file
-      if (!content.english_translation || content.english_translation != "") {
+      if (!content.englishTranslation || content.englishTranslation != "") {
         content = await transcribeAndTranslate(tempFilePath);
       }
 
       // Handle translation if a target language is specified
       if (language !== "en") {
         const translatedText = await translateText(
-          content.english_translation,
+          content.englishTranslation,
           "en",
           language
         );
         content.translation = translatedText;
       }
+      content.destinationLanguage = language;
+      content.favourite = false;
+      const historyRef = ref(database, `users/${sanitizedEmail}/history`);
+      const newEntryRef = await push(historyRef, content);
+      const newEntryId = newEntryRef.key;
+      content.id = newEntryId;
       res.json(content);
     } catch (error) {
       res.status(500).json({ error: error.message || "Internal server error" });

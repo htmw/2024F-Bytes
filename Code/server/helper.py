@@ -1,11 +1,12 @@
 import whisper
-import torch  # Make sure to import torch for device handling
+# import torch  
 import librosa
 import json
 import sys
 import os
 from utils.language_mapping import translation_languages
 from transformers import pipeline
+import json
 
 def transcribe_and_translate_audio(file_path):
     file_path = file_path.strip()
@@ -18,6 +19,7 @@ def transcribe_and_translate_audio(file_path):
     try:
         # Transcribe original audio
         transcription_result = model.transcribe(audio)
+        source_language =transcription_result['language']
         original_text = transcription_result['text']
         
         # Translate the audio (optional task, may not always be available in every model)
@@ -28,7 +30,7 @@ def transcribe_and_translate_audio(file_path):
         # Return an error if transcription fails
         return {"error": f"Error during transcription/translation: {str(e)}"}
 
-    return original_text, translated_text
+    return original_text, translated_text, source_language
 
 
 def translate_text(text, source_lang, target_lang):
@@ -77,8 +79,8 @@ if __name__ == "__main__":
         if "error" in result:
             print(json.dumps({"error": result["error"]}))
         else:
-            original_text, translated_text = result
-            print(json.dumps({"transcription": original_text, "translation": translated_text, "english_translation": translated_text}))
+            original_text, translated_text,source_language = result
+            print(json.dumps({"transcription": original_text, "translation": translated_text, "englishTranslation": translated_text,"sourceLanguage":source_language}))
         
         if os.path.exists(file_path):
             os.remove(file_path)

@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import LoginComponent from "./components/LoginComponent";
-import SignInPage from "./components/SignInPage";
+import SignInPage from "./components/SignUpPage";
 import HomeComponent from "./components/HomeComponent";
 import { ThemeProvider } from "./components/ThemeContext"; // Import ThemeProvider
 
@@ -11,7 +11,9 @@ import "./index.css";
 function App() {
   return (
     <div className="h-screen flex flex-col">
-      <ThemeProvider> {/* Wrap your app with ThemeProvider */}
+      <ThemeProvider>
+        {" "}
+        {/* Wrap your app with ThemeProvider */}
         <Router>
           <Header />
           <Routes>

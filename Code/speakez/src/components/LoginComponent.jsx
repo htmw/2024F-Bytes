@@ -20,17 +20,18 @@ function LoginComponent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://speakez-server.uk.r.appspot.com/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
       const responseData = await response.json();
       if (response.ok) {
         setErr("");
-        localStorage.setItem("loggedEmail", responseData.data.email);
-        localStorage.setItem("name", responseData.data.name);
+        localStorage.setItem("loggedEmail", formData.email);
         navigate("/");
       } else if (response.status === 401) {
         setErr(responseData.error);
@@ -92,22 +93,6 @@ function LoginComponent() {
               onChange={handleChange}
               className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             ></input>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
           </div>
           <button
             type="submit"

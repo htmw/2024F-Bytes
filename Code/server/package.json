@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "build": "echo 'no build step required'",
-    "postinstall": "pip install -r requirements.txt"
+    "start": "./startup.sh",
+    "build": "echo 'no build step required'"
   },
   "keywords": [],
   "author": "",
@@ -20,13 +19,16 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-async-handler": "^1.2.0",
+    "firebase": "^11.0.2",
+    "firebase-admin": "^13.0.1",
     "form-data": "^4.0.1",
     "fs": "^0.0.1-security",
     "multer": "^1.4.5-lts.1",
-    "openai": "^4.71.1"
+    "openai": "^4.71.1",
+    "server": "file:"
   },
   "engines": {
-    "node": "14.x",
+    "node": "22.x",
     "npm": "10.x"
   }
 }
