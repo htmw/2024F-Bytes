@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import FavoriteComponent from "./FavoriteComponent";
 import HistoryComponent from "./HistoryComponent";
 import languages from "./languages.json";
 import { useTheme } from "./ThemeContext"; // Import useTheme
@@ -12,22 +13,22 @@ const HomeComponent = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [copyMessage, setCopyMessage] = useState("");
   const [isHistoryVisible, setIsHistoryVisible] = useState(false);
+  const [isFavoriteVisible, setIsFavoriteVisible] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [isFavorite, setIsFavorite] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
-  const { isDarkMode } = useTheme();
+  const isLoggedIn = localStorage.getItem("loggedEmail");
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     if (files.length > 0) {
       const selectedFile = files[0];
-      // Check if file is an MP3 and its size is less than or equal to 20MB
       if (selectedFile.type !== "audio/mpeg") {
         setErrorMessage("Please upload an MP3 file.");
         setFile(null);
         setFileName("");
       } else if (selectedFile.size > 20 * 1024 * 1024) {
-        // 20MB in bytes
         setErrorMessage("File size should be less than 20MB.");
         setFile(null);
         setFileName("");
@@ -45,13 +46,11 @@ const HomeComponent = () => {
     const files = Array.from(event.dataTransfer.files);
     if (files.length > 0) {
       const selectedFile = files[0];
-      // Check if file is an MP3 and its size is less than or equal to 20MB
       if (selectedFile.type !== "audio/mpeg") {
         setErrorMessage("Please upload an MP3 file.");
         setFile(null);
         setFileName("");
       } else if (selectedFile.size > 20 * 1024 * 1024) {
-        // 20MB in bytes
         setErrorMessage("File size should be less than 20MB.");
         setFile(null);
         setFileName("");
@@ -76,10 +75,14 @@ const HomeComponent = () => {
       formData.append("audioFile", file);
       formData.append("language", selectedLanguage);
       formData.append("content", JSON.stringify(output));
-      const response = await fetch("http://localhost:3000/transcribe", {
-        method: "POST",
-        body: formData,
-      });
+      formData.append("email", localStorage.getItem("loggedEmail"));
+      const response = await fetch(
+        "https://speakez-server.uk.r.appspot.com/transcribe",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       if (response.ok) {
         const res = await response.json();
         setOutput(res);
@@ -92,36 +95,52 @@ const HomeComponent = () => {
       setLoading(false);
     }
   };
+  const handleFavorite = async () => {
+    setIsFavorite((prev) => !prev);
+    try {
+      const data = {
+        id: output.id,
+        email: localStorage.getItem("loggedEmail"),
+      };
+      const response = await fetch(
+        "https://speakez-server.uk.r.appspot.com/api/favourite",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+      if (response.ok) {
+        const res = await response.json();
+        console.log(res);
+      } else {
+        console.error("Failed to add Favourite");
+      }
+    } catch (error) {
+      console.error("Error while processing:", error);
+    } finally {
+    }
+  };
+
   const handleLanguageChange = (event) => {
     setSelectedLanguage(event.target.value);
   };
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
 
-    if (!isFavorite && output?.transcription) {
-      fetch("http://localhost:3000/favorite", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          transcription: output.transcription,
-          fileName: fileName,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Favorite saved successfully:", data);
-        })
-        .catch((error) => {
-          console.error("Error saving favorite:", error);
-        });
-    }
+  const toggleFavorite = () => {
+    setIsHistoryVisible(false);
+    setIsFavoriteVisible((prev) => !prev);
+  };
+
+  const toggleHistory = () => {
+    setIsFavoriteVisible(false);
+    setIsHistoryVisible((prev) => !prev);
   };
 
   const deleteFile = () => {
     setFileName("");
     setFile(null);
     setErrorMessage("");
-    setOutput(null);
+    setOutput({});
   };
 
   const startRecording = async () => {
@@ -187,32 +206,33 @@ const HomeComponent = () => {
     }
   };
 
-  const toggleHistory = () => {
-    setIsHistoryVisible((prev) => !prev);
-  };
+ // Apply different background and text colors based on isDarkMode
+ const containerStyle = isDarkMode
+ ? "bg-gray-700 text-white"
+ : "bg-white text-gray-600";
 
-    // Apply different background and text colors based on isDarkMode
-    const containerStyle = isDarkMode
-    ? "bg-gray-700 text-white"
-    : "bg-white text-gray-600";
+ const containerStyletextbox = isDarkMode
+ ? "bg-gray-300 text-white"
+ : "bg-white text-gray-600";
 
-    const containerStyletextbox = isDarkMode
-    ? "bg-gray-300 text-white"
-    : "bg-white text-gray-600";
-
-  return (
-    <div className={`flex items-center justify-center h-screen overflow-hidden relative ${containerStyle}`}>
-      <div className={`bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative ${containerStyletextbox}`}>
+return (
+ <div className={`flex items-center justify-center h-screen overflow-hidden relative ${containerStyle}`}>
+   <div className={`bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative ${containerStyletextbox}`}>
+     {copyMessage && (
+       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+         {copyMessage}
+       </div>
+     )}
+        {/* Top Section */}
         {copyMessage && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
             {copyMessage}
           </div>
         )}
-
         <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
           <div
             id="drop-area"
-            className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer flex-1"
+            className="border-2 border-dashed border-gray-300 rounded-md p-8 text-center cursor-pointer flex-1"
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onClick={() => document.getElementById("fileInput").click()}
@@ -232,7 +252,7 @@ const HomeComponent = () => {
               style={{ display: "none" }}
             />
           </div>
-
+          {/* Recording Button */}
           <div className="flex justify-center md:justify-start">
             {isRecording ? (
               <button
@@ -251,7 +271,7 @@ const HomeComponent = () => {
             )}
           </div>
         </div>
-
+        {/* File Info Section */}
         <div className="mt-4">
           {fileName ? (
             <div className="flex items-center justify-between bg-gray-100 px-4 py-2 rounded-md text-sm">
@@ -269,6 +289,7 @@ const HomeComponent = () => {
             </p>
           )}
         </div>
+        {/* Language Selection */}
         <div className="mt-4">
           <label
             htmlFor="languageSelect"
@@ -289,54 +310,63 @@ const HomeComponent = () => {
             ))}
           </select>
         </div>
-        {errorMessage && (
-          <div className="mt-4 text-red-500 text-sm text-center">
-            {errorMessage}
-          </div>
-        )}
 
+        {/* Translate Button */}
         <div className="mt-6">
           <button
             onClick={translate}
             className={`w-full py-2 px-4 rounded-md shadow text-white ${
-              loading ? "bg-gray-500" : "bg-indigo-500 hover:bg-indigo-600"
+              loading || !file
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-indigo-500 hover:bg-indigo-600"
             }`}
-            disabled={loading}
+            disabled={loading || !file}
           >
             {loading ? "Translating..." : "Translate"}
           </button>
         </div>
-
-        <div className="mt-4">
-          <button
-            onClick={toggleHistory}
-            className="w-full py-2 px-4 rounded-md bg-indigo-500 text-white hover:bg-indigo-600"
-          >
-            {isHistoryVisible ? "Hide History" : "Show History"}
-          </button>
-        </div>
-
-        <div className="mt-8 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
-          <div className="flex-1 overflow-hidden relative">
-            {output?.transcription && (
-              <div className="border-2 border-gray-300 p-4 rounded-md bg-gray-50 h-full">
-                <h3 className="text-lg font-semibold mb-2">Transcription:</h3>
-                <p className="overflow-auto">{output.transcription}</p>
-                <button
-                  onClick={() => handleCopy(output.transcription)}
-                  className="absolute top-2 right-2 text-indigo-500 hover:text-indigo-600"
-                >
-                  <i className="fas fa-copy"></i>
-                </button>
-              </div>
-            )}
+        {/* Output Section */}
+        <div className="mt-8 space-y-4 md:space-y-0 md:flex md:space-x-6">
+          {/* Transcription Output */}
+          <div className="flex-1">
+            <label
+              htmlFor="transcriptionBox"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Transcription
+            </label>
+            <div
+              id="transcriptionBox"
+              className="border-2 border-gray-300 p-4 rounded-md bg-gray-50 h-full relative"
+            >
+              <p className="overflow-auto text-sm">{output.transcription}</p>
+              {output.translation && (
+                <div className="absolute top-2 right-2 flex space-x-4">
+                  <button
+                    onClick={() => handleCopy(output.translation)}
+                    className="text-indigo-500 hover:text-indigo-600"
+                  >
+                    <i className="fas fa-copy"></i>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="flex-1 overflow-hidden relative">
-            {output?.translation && (
-              <div className="border-2 border-gray-300 p-4 rounded-md bg-gray-50 h-full">
-                <h3 className="text-lg font-semibold mb-2">Translation:</h3>
-                <p className="overflow-auto">{output.translation}</p>
+          {/* Translation Output */}
+          <div className="flex-1">
+            <label
+              htmlFor="translationBox"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Translation
+            </label>
+            <div
+              id="translationBox"
+              className="border-2 border-gray-300 p-4 rounded-md bg-gray-50 h-full relative"
+            >
+              <p className="overflow-auto text-sm">{output.translation}</p>
+              {output.translation && (
                 <div className="absolute top-2 right-2 flex space-x-4">
                   <button
                     onClick={() => handleCopy(output.translation)}
@@ -346,23 +376,63 @@ const HomeComponent = () => {
                   </button>
                   <button
                     onClick={handleDownloadBoth}
-                    className="text-indigo-500 py-1 px-2 rounded-md"
+                    className="text-indigo-500  rounded-md hover:bg-gray-100"
                   >
                     <i className="fas fa-download"></i>
                   </button>
+                  <button
+                    onClick={handleFavorite}
+                    className="text-indigo-500 rounded-md"
+                  >
+                    {/* Conditional class based on isFavorite state */}
+                    <i
+                      className={`fa-${
+                        isFavorite ? "solid" : "regular"
+                      } fa-star`}
+                    ></i>
+                  </button>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      <div
-        className={`absolute top-0 right-0 w-64 h-full bg-white shadow-xl z-20 transform transition-all duration-300 ${
-          isHistoryVisible ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <HistoryComponent />
+      {/* Toggle Buttons */}
+      {isLoggedIn && (
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+          <button
+            onClick={toggleHistory}
+            className={`text-indigo-500 rounded-full p-5 shadow ${
+              isHistoryVisible ? "bg-gray-200" : ""
+            }`}
+          >
+            <i className="fa-solid  fa-clock-rotate-left"></i>
+          </button>
+          <button
+            onClick={toggleFavorite}
+            className={`text-indigo-500 rounded-full p-5 shadow ${
+              isFavoriteVisible ? "bg-gray-200" : ""
+            }`}
+          >
+            <i className="fa-solid  fa-star"></i>
+          </button>
+        </div>
+      )}
+      <div>
+        {/* Sliding Panel for History */}
+        {isHistoryVisible && (
+          <div className="absolute right-0 top-0 w-80 bg-white p-3 shadow-lg h-full">
+            <HistoryComponent />
+          </div>
+        )}
+
+        {/* Sliding Panel for Favorite */}
+        {isFavoriteVisible && (
+          <div className="absolute right-0 top-0 w-80 bg-white p-3 shadow-lg h-full">
+            <FavoriteComponent />
+          </div>
+        )}
       </div>
     </div>
   );
