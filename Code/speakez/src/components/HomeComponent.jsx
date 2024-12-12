@@ -196,9 +196,13 @@ const HomeComponent = () => {
     ? "bg-gray-700 text-white"
     : "bg-white text-gray-600";
 
+    const containerStyletextbox = isDarkMode
+    ? "bg-gray-300 text-white"
+    : "bg-white text-gray-600";
+
   return (
     <div className={`flex items-center justify-center h-screen overflow-hidden relative ${containerStyle}`}>
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative ">
+      <div className={`bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative ${containerStyletextbox}`}>
         {copyMessage && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
             {copyMessage}
