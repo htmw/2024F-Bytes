@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import FavoriteComponent from "./FavoriteComponent";
 import HistoryComponent from "./HistoryComponent";
 import languages from "./languages.json";
-import { useTheme } from "./ThemeContext"; // Import useTheme
+import { useTheme } from "./ThemeContext";
 
 const HomeComponent = () => {
   const [fileName, setFileName] = useState("");
