@@ -20,6 +20,7 @@ const HomeComponent = () => {
   const audioChunks = useRef([]);
   const isLoggedIn = localStorage.getItem("loggedEmail");
 
+  const { isDarkMode } = useTheme();
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     if (files.length > 0) {
@@ -206,23 +207,27 @@ const HomeComponent = () => {
     }
   };
 
- // Apply different background and text colors based on isDarkMode
- const containerStyle = isDarkMode
- ? "bg-gray-700 text-white"
- : "bg-white text-gray-600";
+  // Apply different background and text colors based on isDarkMode
+  const containerStyle = isDarkMode
+    ? "bg-gray-700 text-white"
+    : "bg-white text-gray-600";
 
- const containerStyletextbox = isDarkMode
- ? "bg-gray-300 text-white"
- : "bg-white text-gray-600";
+  const containerStyletextbox = isDarkMode
+    ? "bg-gray-300 text-white"
+    : "bg-white text-gray-600";
 
-return (
- <div className={`flex items-center justify-center h-screen overflow-hidden relative ${containerStyle}`}>
-   <div className={`bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative ${containerStyletextbox}`}>
-     {copyMessage && (
-       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
-         {copyMessage}
-       </div>
-     )}
+  return (
+    <div
+      className={`flex items-center justify-center h-screen overflow-hidden relative ${containerStyle}`}
+    >
+      <div
+        className={`bg-white shadow-xl rounded-lg p-8 w-full max-w-xl relative ${containerStyletextbox}`}
+      >
+        {copyMessage && (
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+            {copyMessage}
+          </div>
+        )}
         {/* Top Section */}
         {copyMessage && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
@@ -299,7 +304,7 @@ return (
           </label>
           <select
             id="languageSelect"
-            className="w-full py-2 px-4 mt-2 rounded-md border-gray-300"
+            className={`w-full py-2 px-4 mt-2 rounded-md border-gray-300 ${containertextColor}`}
             onChange={handleLanguageChange}
             value={selectedLanguage}
           >
@@ -339,7 +344,9 @@ return (
               id="transcriptionBox"
               className="border-2 border-gray-300 p-4 rounded-md bg-gray-50 h-full relative"
             >
-              <p className="overflow-auto text-sm">{output.transcription}</p>
+              <p className={`overflow-auto text-sm ${containertextColor}`}>
+                {output.transcription}
+              </p>
               {output.translation && (
                 <div className="absolute top-2 right-2 flex space-x-4">
                   <button
