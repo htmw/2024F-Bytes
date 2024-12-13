@@ -74,6 +74,15 @@ function Header() {
               {isDarkMode ? "Light Mode" : "Dark Mode"}
             </button>
           </li>
+
+          {/* Help Icon */}
+          <a
+            href="mailto:speakez-bytes@googlegroups.com"
+            className="text-indigo-500 hover:text-indigo-600"
+            title="Need Help? Click the icon to email us."
+          >
+            <i className="fas fa-question-circle text-xl"></i>
+          </a>
         </ul>
       </nav>
     </header>
@@ -81,3 +90,7 @@ function Header() {
 }
 
 export default Header;
+
+
+
+
