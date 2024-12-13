@@ -22,12 +22,12 @@ const HomeComponent = () => {
 
   const { isDarkMode } = useTheme();
   const containerStyle = isDarkMode
-    ? "bg-gray-700 text-white"
-    : "bg-white text-gray-600";
+  ? "bg-gray-700 text-gray"
+  : "bg-white text-gray-600";
 
-  const containerStyletextbox = isDarkMode
-    ? "bg-gray-300 text-white"
-    : "bg-white text-gray-600";
+const containerStyletextbox = isDarkMode
+  ? "bg-gray-300 text-gray"
+  : "bg-white text-gray-600";
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
